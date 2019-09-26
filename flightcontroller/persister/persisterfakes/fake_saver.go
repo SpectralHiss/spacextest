@@ -4,15 +4,15 @@ package persisterfakes
 import (
 	"sync"
 
-	"github.com/SpectralHiss/spacextest/flightcontroller"
 	"github.com/SpectralHiss/spacextest/flightcontroller/persister"
+	"github.com/SpectralHiss/spacextest/flightcontroller/ticketdetails"
 )
 
 type FakeSaver struct {
-	SaveStub        func(flightcontroller.TicketDetails) error
+	SaveStub        func(ticketdetails.TicketDetails) error
 	saveMutex       sync.RWMutex
 	saveArgsForCall []struct {
-		arg1 flightcontroller.TicketDetails
+		arg1 ticketdetails.TicketDetails
 	}
 	saveReturns struct {
 		result1 error
@@ -24,11 +24,11 @@ type FakeSaver struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeSaver) Save(arg1 flightcontroller.TicketDetails) error {
+func (fake *FakeSaver) Save(arg1 ticketdetails.TicketDetails) error {
 	fake.saveMutex.Lock()
 	ret, specificReturn := fake.saveReturnsOnCall[len(fake.saveArgsForCall)]
 	fake.saveArgsForCall = append(fake.saveArgsForCall, struct {
-		arg1 flightcontroller.TicketDetails
+		arg1 ticketdetails.TicketDetails
 	}{arg1})
 	fake.recordInvocation("Save", []interface{}{arg1})
 	fake.saveMutex.Unlock()
@@ -48,13 +48,13 @@ func (fake *FakeSaver) SaveCallCount() int {
 	return len(fake.saveArgsForCall)
 }
 
-func (fake *FakeSaver) SaveCalls(stub func(flightcontroller.TicketDetails) error) {
+func (fake *FakeSaver) SaveCalls(stub func(ticketdetails.TicketDetails) error) {
 	fake.saveMutex.Lock()
 	defer fake.saveMutex.Unlock()
 	fake.SaveStub = stub
 }
 
-func (fake *FakeSaver) SaveArgsForCall(i int) flightcontroller.TicketDetails {
+func (fake *FakeSaver) SaveArgsForCall(i int) ticketdetails.TicketDetails {
 	fake.saveMutex.RLock()
 	defer fake.saveMutex.RUnlock()
 	argsForCall := fake.saveArgsForCall[i]

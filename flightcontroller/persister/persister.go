@@ -1,6 +1,6 @@
 package persister
 
-import "github.com/SpectralHiss/spacextest/flightcontroller"
+import "github.com/SpectralHiss/spacextest/flightcontroller/ticketdetails"
 
 type SaverGetter interface {
 	Saver
@@ -9,9 +9,9 @@ type SaverGetter interface {
 
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . Saver
 type Saver interface {
-	Save(flightcontroller.TicketDetails) error
+	Save(ticketdetails.TicketDetails) error
 }
 
 type Getter interface {
-	GetAll() []flightcontroller.TicketDetails
+	GetAll() []ticketdetails.TicketDetails
 }

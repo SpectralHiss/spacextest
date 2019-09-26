@@ -1,4 +1,4 @@
-package flightcontroller
+package ticketdetails
 
 import "time"
 

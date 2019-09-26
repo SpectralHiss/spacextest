@@ -11,6 +11,7 @@ import (
 	. "github.com/SpectralHiss/spacextest/flightcontroller"
 	"github.com/SpectralHiss/spacextest/flightcontroller/persister/persisterfakes"
 	"github.com/SpectralHiss/spacextest/flightcontroller/scheduler"
+	"github.com/SpectralHiss/spacextest/flightcontroller/ticketdetails"
 
 	"github.com/SpectralHiss/spacextest/flightcontroller/scheduler/schedulerfakes"
 	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier/spacexquerierfakes"
@@ -23,7 +24,7 @@ func TestBooks(t *testing.T) {
 
 var _ = Describe("Space flight booking", func() {
 
-	var defaultTicketRequest = TicketDetails{
+	var defaultTicketRequest = ticketdetails.TicketDetails{
 		FirstName:     "Houssem",
 		LastName:      "El Fekih",
 		Gender:        "Male",
@@ -34,9 +35,9 @@ var _ = Describe("Space flight booking", func() {
 
 	Describe("creating new reservation", func() {
 		Context("When creating a valid new reservation with a good destination mapping,no clash with SpaceX", func() {
-			var FakePersister persisterfakes.FakeSaver
-			var FakeSpaceXQuerier spacexquerierfakes.FakeSpaceXQuerier
-			var FakeScheduler schedulerfakes.FakeScheduler
+			var FakePersister = &persisterfakes.FakeSaver{}
+			var FakeSpaceXQuerier = &spacexquerierfakes.FakeSpaceXQuerier{}
+			var FakeScheduler = &schedulerfakes.FakeScheduler{}
 
 			FakeScheduler.GenerateScheduleReturns(map[int]map[scheduler.Day]scheduler.DestinationID{
 				0: map[scheduler.Day]scheduler.DestinationID{
