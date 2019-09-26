@@ -36,7 +36,7 @@ var _ = Describe("Space flight booking", func() {
 		Context("When creating a valid new reservation with a good destination mapping,no clash with SpaceX", func() {
 			var FakePersister persisterfakes.FakeSaver
 			var FakeSpaceXQuerier spacexquerierfakes.FakeSpaceXQuerier
-			var FakeScheduler schedulerfakes.Scheduler
+			var FakeScheduler schedulerfakes.FakeScheduler
 
 			FakeScheduler.GenerateScheduleReturns(map[int]map[scheduler.Day]scheduler.DestinationID{
 				0: map[scheduler.Day]scheduler.DestinationID{
@@ -49,22 +49,22 @@ var _ = Describe("Space flight booking", func() {
 					6: 6,
 				},
 			})
-		})
 
-		FakeSpaceXQuerier.LaunchPossibleReturns(true)
+			FakeSpaceXQuerier.LaunchPossibleReturns(true)
 
-		fakePersister.SaveReturns(nil)
+			FakePersister.SaveReturns(nil)
 
-		controller = NewFlightController(FakePersister, FakeSpaceXQuerier, FakeScheduler)
+			controller := NewFlightController(FakePersister, FakeSpaceXQuerier, FakeScheduler)
 
-		It("succeeds in saving the reservation", func() {
-			Expect(FakeSpaceXQuerier.LaunchPossibleCallCount()).To(Equal(1))
-			Expect(FakeScheduler.GenerateScheduleCallCount()).To(Equal(1))
-			Expect(FakePersister.SaveCallCount()).To(Equal(1))
+			It("succeeds in saving the reservation", func() {
+				Expect(FakeSpaceXQuerier.LaunchPossibleCallCount()).To(Equal(1))
+				Expect(FakeScheduler.GenerateScheduleCallCount()).To(Equal(1))
+				Expect(FakePersister.SaveCallCount()).To(Equal(1))
 
-			Expect(FakePersister.SaveArgsForCall(0)).To(Equal(defaultTicketRequest))
+				Expect(FakePersister.SaveArgsForCall(0)).To(Equal(defaultTicketRequest))
 
-			Expect(controller.Reserve(defaultTicketRequest)).ToBeTrue()
+				Expect(controller.Reserve(defaultTicketRequest)).To(BeTrue())
+			})
 		})
 
 	})
