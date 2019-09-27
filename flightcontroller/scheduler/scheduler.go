@@ -51,5 +51,11 @@ type FlightScheduler interface {
 }
 
 func (sched *Scheduler) CheckSchedule(lid LaunchPadID, dw Day, dest DestinationID) bool {
-	return true
+
+	launchPadSchedule, ok := sched.SMap[lid]
+	if !ok {
+		return false
+	}
+
+	return launchPadSchedule[dw] == dest
 }

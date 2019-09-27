@@ -39,7 +39,7 @@ var _ = Describe("Scheduler suite", func() {
 			scheduler = NewScheduler(fakeSpaceX)
 		})
 
-		It("Should be successfull", func() {
+		It("Should return false", func() {
 			validLID, validDest, validDay := extractGoodSchedule(scheduler.SMap)
 			isValid := scheduler.CheckSchedule(validLID, validDay, validDest)
 			Expect(isValid).To(BeTrue())
@@ -48,19 +48,44 @@ var _ = Describe("Scheduler suite", func() {
 
 	})
 
+	Context("When the scheduler is check with invalidLaunchPadID", func() {
+		BeforeEach(func() {
+			fakeSpaceX = &spacexquerierfakes.FakeSpaceXQuerier{}
+
+			fakeSpaceX.GetLaunchIdsReturns(List(50))
+			scheduler = NewScheduler(fakeSpaceX)
+		})
+
+		It("Should return false", func() {
+			_, validDest, validDay := extractGoodSchedule(scheduler.SMap)
+			invalidLID := LaunchPadID(51) // we have 0 to 50 in our example
+			isValid := scheduler.CheckSchedule(invalidLID, validDay, validDest)
+			Expect(isValid).To(Not(BeTrue()))
+			Expect(fakeSpaceX.GetLaunchIdsCallCount()).To(Equal(1))
+
+		})
+
+	})
+
+	Context("When the scheduler is check with a wrong destination for that day", func() {
+		BeforeEach(func() {
+			fakeSpaceX = &spacexquerierfakes.FakeSpaceXQuerier{}
+
+			fakeSpaceX.GetLaunchIdsReturns(List(50))
+			scheduler = NewScheduler(fakeSpaceX)
+		})
+
+		It("Should return false", func() {
+			validLID, validDest, validDay := extractGoodSchedule(scheduler.SMap)
+
+			isValid := scheduler.CheckSchedule(validLID, validDay, (validDest + 1%8))
+			Expect(isValid).To(Not(BeTrue()))
+			Expect(fakeSpaceX.GetLaunchIdsCallCount()).To(Equal(1))
+
+		})
+
+	})
+	//TODO
+	Context("When the scheduler is check with an invalid day", func() {})
+
 })
-
-// func giveValidTicketDetails(scheduleMap Schedule) ticketdetails.TicketDetails {
-// 	number := rand.Int()
-
-// 	//TODO CONTINUE HERE
-// 	var defaultTicketRequest = ticketdetails.TicketDetails{
-// 		FirstName:     "Houssem",
-// 		LastName:      "El Fekih",
-// 		Gender:        "Male",
-// 		Birthday:      time.Now(),
-// 		LaunchpadID:   0,
-// 		DestinationID: 0,
-// 		LaunchDate:    time.Now()}
-
-// }
