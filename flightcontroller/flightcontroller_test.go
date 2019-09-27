@@ -32,35 +32,76 @@ var _ = Describe("Space flight booking", func() {
 		LaunchDate:    time.Now()}
 
 	Describe("creating new reservation", func() {
+		var FakeS *persisterfakes.FakeSaver
+		var FakeSpace *spacexquerierfakes.FakeSpaceXQuerier
+		var FakeSched *schedulerfakes.FakeFlightScheduler
+
+		BeforeEach(func() {
+
+			FakeS = &persisterfakes.FakeSaver{}
+
+			FakeSpace = &spacexquerierfakes.FakeSpaceXQuerier{}
+			FakeSched = &schedulerfakes.FakeFlightScheduler{}
+		})
+
 		Context("When creating a valid new reservation with a good destination mapping,no clash with SpaceX", func() {
-			var FakePersister = &persisterfakes.FakeSaver{}
-			var FakeSpaceXQuerier = &spacexquerierfakes.FakeSpaceXQuerier{}
-			var FakeScheduler = &schedulerfakes.FakeFlightScheduler{}
 
-			FakeScheduler.CheckScheduleReturns(true)
-
-			FakeSpaceXQuerier.LaunchPossibleReturns(true)
-
-			FakePersister.SaveReturns(nil)
-
-			controller := NewFlightController(FakePersister, FakeSpaceXQuerier, FakeScheduler)
+			BeforeEach(func() {
+				FakeSched.CheckScheduleReturns(true)
+				FakeSpace.LaunchPossibleReturns(true)
+				FakeS.SaveReturns(nil)
+			})
 
 			It("succeeds in saving the reservation", func() {
+
+				controller := NewFlightController(FakeS, FakeSpace, FakeSched)
 				Expect(controller.Reserve(defaultTicketRequest)).To(BeNil())
 
-				Expect(FakeSpaceXQuerier.LaunchPossibleCallCount()).To(Equal(1))
-				Expect(FakeScheduler.CheckScheduleCallCount()).To(Equal(1))
-				Expect(FakePersister.SaveCallCount()).To(Equal(1))
+				Expect(FakeSpace.LaunchPossibleCallCount()).To(Equal(1))
+				Expect(FakeSched.CheckScheduleCallCount()).To(Equal(1))
+				Expect(FakeS.SaveCallCount()).To(Equal(1))
 
-				Expect(FakePersister.SaveArgsForCall(0)).To(Equal(defaultTicketRequest))
+				Expect(FakeS.SaveArgsForCall(0)).To(Equal(defaultTicketRequest))
 
 			})
 		})
 
+		Context("When creating a valid new reservation with a good destination mapping, clashing with SpaceX", func() {
+			BeforeEach(func() {
+				FakeSched.CheckScheduleReturns(true)
+				FakeSpace.LaunchPossibleReturns(false)
+				FakeS.SaveReturns(nil)
+			})
+
+			It("does not save the reservation, returns an error", func() {
+				controller := NewFlightController(FakeS, FakeSpace, FakeSched)
+				err := controller.Reserve(defaultTicketRequest)
+
+				Expect(err).To(Not(BeNil()))
+				Expect(err).To(MatchError("Bad request conflicting with spaceX launch"))
+				Expect(FakeS.SaveCallCount()).To(Equal(0))
+			})
+
+		})
+
+		Context("When creating a valid new reservation non conforming to schedule", func() {
+			BeforeEach(func() {
+				FakeSched.CheckScheduleReturns(false)
+				FakeSpace.LaunchPossibleReturns(true)
+				FakeS.SaveReturns(nil)
+			})
+
+			It("does not save the reservation, returns an error", func() {
+				controller := NewFlightController(FakeS, FakeSpace, FakeSched)
+				err := controller.Reserve(defaultTicketRequest)
+
+				Expect(err).To(Not(BeNil()))
+				Expect(err).To(MatchError("Bad request, not conforming to schedule"))
+				Expect(FakeS.SaveCallCount()).To(Equal(0))
+			})
+
+		})
+
 	})
-
-	Context("When creating a valid new reservation with a good destination mapping, clashing with SpaceX", func() {})
-
-	Context("When creating a valid new reservation with a bad destination mapping", func() {})
 
 })

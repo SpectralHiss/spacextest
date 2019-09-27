@@ -29,16 +29,12 @@ func NewFlightController(db persister.Saver, q spacexquerier.SpaceXQuerier, sche
 
 func (f *flightController) Reserve(t ticketdetails.TicketDetails) error {
 
-	_ = f.sched.CheckSchedule(scheduler.LaunchPadID(t.LaunchpadID), scheduler.Day(t.LaunchDate.Weekday()),
+	ok := f.sched.CheckSchedule(scheduler.LaunchPadID(t.LaunchpadID), scheduler.Day(t.LaunchDate.Weekday()),
 		scheduler.DestinationID(t.DestinationID))
 
-	// // TODO: refactor day mapping from date to our date
-	// day, ok := schedule[t.LaunchpadID][scheduler.Day(t.LaunchDate.Weekday())]
-	// || day != scheduler.DestinationID(t.DestinationID)
-
-	// if !ok {
-	// 	return fmt.Errorf("Bad Request, not conforming to schedule")
-	// }
+	if !ok {
+		return fmt.Errorf("Bad request, not conforming to schedule")
+	}
 
 	if !f.q.LaunchPossible(t.LaunchpadID, t.LaunchDate) {
 		return fmt.Errorf("Bad request conflicting with spaceX launch")
