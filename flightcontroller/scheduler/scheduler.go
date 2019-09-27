@@ -1,8 +1,9 @@
 package scheduler
 
 import (
+	"math/rand"
+
 	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier"
-	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier/spacexquerierfakes"
 )
 
 //import "github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier"
@@ -14,18 +15,32 @@ type LaunchPadID int
 type Schedule map[LaunchPadID]map[Day]DestinationID
 
 type Scheduler struct {
-	Spcxq spacexquerier.SpaceXQuerier
-	SMap  Schedule
+	SMap Schedule
 }
 
-func GenerateMapping() Schedule {
-	return make(Schedule)
+func GenerateMapping(querier spacexquerier.SpaceXQuerier) Schedule {
+
+	LaunchPadIDs := querier.GetLaunchIds()
+
+	scheduleMap := make(map[LaunchPadID]map[Day]DestinationID)
+
+	for id := range LaunchPadIDs {
+		launchPadSched := make(map[Day]DestinationID)
+		scheduleMap[LaunchPadID(id)] = launchPadSched
+		take7from8 := rand.Perm(8)[:7]
+		for idx, val := range take7from8 {
+			launchPadSched[Day(idx)] = DestinationID(val)
+		}
+
+	}
+
+	return scheduleMap
+
 }
 
 func NewScheduler(spsxq spacexquerier.SpaceXQuerier) *Scheduler {
 	scheduler := &Scheduler{
-		Spcxq: &spacexquerierfakes.FakeSpaceXQuerier{},
-		SMap:  GenerateMapping(),
+		SMap: GenerateMapping(spsxq),
 	}
 	return scheduler
 }
