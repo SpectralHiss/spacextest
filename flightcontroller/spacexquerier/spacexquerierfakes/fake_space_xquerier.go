@@ -9,6 +9,16 @@ import (
 )
 
 type FakeSpaceXQuerier struct {
+	GetLaunchIdsStub        func() []int
+	getLaunchIdsMutex       sync.RWMutex
+	getLaunchIdsArgsForCall []struct {
+	}
+	getLaunchIdsReturns struct {
+		result1 []int
+	}
+	getLaunchIdsReturnsOnCall map[int]struct {
+		result1 []int
+	}
 	LaunchPossibleStub        func(int, time.Time) bool
 	launchPossibleMutex       sync.RWMutex
 	launchPossibleArgsForCall []struct {
@@ -23,6 +33,58 @@ type FakeSpaceXQuerier struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *FakeSpaceXQuerier) GetLaunchIds() []int {
+	fake.getLaunchIdsMutex.Lock()
+	ret, specificReturn := fake.getLaunchIdsReturnsOnCall[len(fake.getLaunchIdsArgsForCall)]
+	fake.getLaunchIdsArgsForCall = append(fake.getLaunchIdsArgsForCall, struct {
+	}{})
+	fake.recordInvocation("GetLaunchIds", []interface{}{})
+	fake.getLaunchIdsMutex.Unlock()
+	if fake.GetLaunchIdsStub != nil {
+		return fake.GetLaunchIdsStub()
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	fakeReturns := fake.getLaunchIdsReturns
+	return fakeReturns.result1
+}
+
+func (fake *FakeSpaceXQuerier) GetLaunchIdsCallCount() int {
+	fake.getLaunchIdsMutex.RLock()
+	defer fake.getLaunchIdsMutex.RUnlock()
+	return len(fake.getLaunchIdsArgsForCall)
+}
+
+func (fake *FakeSpaceXQuerier) GetLaunchIdsCalls(stub func() []int) {
+	fake.getLaunchIdsMutex.Lock()
+	defer fake.getLaunchIdsMutex.Unlock()
+	fake.GetLaunchIdsStub = stub
+}
+
+func (fake *FakeSpaceXQuerier) GetLaunchIdsReturns(result1 []int) {
+	fake.getLaunchIdsMutex.Lock()
+	defer fake.getLaunchIdsMutex.Unlock()
+	fake.GetLaunchIdsStub = nil
+	fake.getLaunchIdsReturns = struct {
+		result1 []int
+	}{result1}
+}
+
+func (fake *FakeSpaceXQuerier) GetLaunchIdsReturnsOnCall(i int, result1 []int) {
+	fake.getLaunchIdsMutex.Lock()
+	defer fake.getLaunchIdsMutex.Unlock()
+	fake.GetLaunchIdsStub = nil
+	if fake.getLaunchIdsReturnsOnCall == nil {
+		fake.getLaunchIdsReturnsOnCall = make(map[int]struct {
+			result1 []int
+		})
+	}
+	fake.getLaunchIdsReturnsOnCall[i] = struct {
+		result1 []int
+	}{result1}
 }
 
 func (fake *FakeSpaceXQuerier) LaunchPossible(arg1 int, arg2 time.Time) bool {
@@ -89,6 +151,8 @@ func (fake *FakeSpaceXQuerier) LaunchPossibleReturnsOnCall(i int, result1 bool) 
 func (fake *FakeSpaceXQuerier) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.getLaunchIdsMutex.RLock()
+	defer fake.getLaunchIdsMutex.RUnlock()
 	fake.launchPossibleMutex.RLock()
 	defer fake.launchPossibleMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}

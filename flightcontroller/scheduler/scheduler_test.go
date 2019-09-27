@@ -1,14 +1,51 @@
 package scheduler_test
 
 import (
+	"math/rand"
+
 	. "github.com/SpectralHiss/spacextest/flightcontroller/scheduler"
+	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier/spacexquerierfakes"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Test suite 2", func() {
-	It("Should SUCCESS", func() {})
+func List(end int) []int {
+	return rand.Perm(end)
+}
+
+func extractGoodSchedule(sched Schedule) (LaunchPadID, DestinationID, Day) {
+	someLaunchPad := LaunchPadID(rand.Intn(len(sched)))
+	someDay := Day(rand.Intn(7))
+	return someLaunchPad, sched[someLaunchPad][someDay], someDay
+}
+
+var _ = Describe("Scheduler suite", func() {
+	var scheduler *scheduler
+	var fakeSpaceX *spacexquerierfakes.FakeSpaceXQuerier
+
+	BeforeEach(func() {
+
+		fakeSpaceX.GetLaunchIdsReturns(List(50))
+		scheduler = NewScheduler(fakespaceX)
+	})
+
+	Context("When the scheduler is checked w valid LaunchPadID, DestinationID mapping for that day", func() {
+
+		BeforeEach(func() {
+			// generate valid schedule
+			launchPadID, destinationID, Day := extractGoodSchedule(scheduler.q)
+
+		})
+
+		It("Should be successfull", func() {
+			isValid := scheduler.CheckScheduler(launchPadID, DestinationID, Day)
+			Expect(isValid).To(BeTrue())
+			Expect(fakeSpaceX.GetLaunchIdCallCount).To(Equal(1))
+		})
+
+	})
+
 })
 
 // func GenerateFakeSchedule() Schedule {
