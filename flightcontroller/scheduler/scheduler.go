@@ -13,19 +13,19 @@ type LaunchPadID int
 
 type Schedule map[LaunchPadID]map[Day]DestinationID
 
-type scheduler struct {
-	spcxq spacexquerier.SpaceXQuerier
-	s     Schedule
+type Scheduler struct {
+	Spcxq spacexquerier.SpaceXQuerier
+	SMap  Schedule
 }
 
 func GenerateMapping() Schedule {
 	return make(Schedule)
 }
 
-func NewScheduler(spsxq spacexquerier.SpaceXQuerier) *scheduler {
-	scheduler := &scheduler{
-		spcxq: &spacexquerierfakes.FakeSpaceXQuerier{},
-		s:     GenerateMapping(),
+func NewScheduler(spsxq spacexquerier.SpaceXQuerier) *Scheduler {
+	scheduler := &Scheduler{
+		Spcxq: &spacexquerierfakes.FakeSpaceXQuerier{},
+		SMap:  GenerateMapping(),
 	}
 	return scheduler
 }
@@ -35,5 +35,6 @@ type FlightScheduler interface {
 	CheckSchedule(launchID LaunchPadID, d Day, dest DestinationID) bool
 }
 
-// (sched *Schedule) func CheckSchedule(launchID , Day, DestinationID) {
-// }
+func (sched *Scheduler) CheckSchedule(lid LaunchPadID, dw Day, dest DestinationID) bool {
+	return true
+}
