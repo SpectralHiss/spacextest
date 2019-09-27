@@ -7,7 +7,7 @@ type TicketDetails struct {
 	LastName      string
 	Gender        string
 	Birthday      time.Time
-	LaunchpadID   int
+	LaunchpadID   string
 	DestinationID int
 	LaunchDate    time.Time
 }

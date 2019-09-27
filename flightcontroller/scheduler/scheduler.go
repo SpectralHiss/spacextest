@@ -3,14 +3,12 @@ package scheduler
 import (
 	"math/rand"
 
+	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
+
 	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier"
 )
 
 //import "github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier"
-
-type Day int
-type DestinationID int
-type LaunchPadID int
 
 type Schedule map[LaunchPadID]map[Day]DestinationID
 

@@ -27,7 +27,7 @@ var _ = Describe("Space flight booking", func() {
 		LastName:      "El Fekih",
 		Gender:        "Male",
 		Birthday:      time.Now(),
-		LaunchpadID:   0,
+		LaunchpadID:   "someval",
 		DestinationID: 0,
 		LaunchDate:    time.Now()}
 

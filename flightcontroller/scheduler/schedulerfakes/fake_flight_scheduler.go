@@ -4,16 +4,17 @@ package schedulerfakes
 import (
 	"sync"
 
+	"github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
 	"github.com/SpectralHiss/spacextest/flightcontroller/scheduler"
 )
 
 type FakeFlightScheduler struct {
-	CheckScheduleStub        func(scheduler.LaunchPadID, scheduler.Day, scheduler.DestinationID) bool
+	CheckScheduleStub        func(querytypes.LaunchPadID, querytypes.Day, querytypes.DestinationID) bool
 	checkScheduleMutex       sync.RWMutex
 	checkScheduleArgsForCall []struct {
-		arg1 scheduler.LaunchPadID
-		arg2 scheduler.Day
-		arg3 scheduler.DestinationID
+		arg1 querytypes.LaunchPadID
+		arg2 querytypes.Day
+		arg3 querytypes.DestinationID
 	}
 	checkScheduleReturns struct {
 		result1 bool
@@ -25,13 +26,13 @@ type FakeFlightScheduler struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeFlightScheduler) CheckSchedule(arg1 scheduler.LaunchPadID, arg2 scheduler.Day, arg3 scheduler.DestinationID) bool {
+func (fake *FakeFlightScheduler) CheckSchedule(arg1 querytypes.LaunchPadID, arg2 querytypes.Day, arg3 querytypes.DestinationID) bool {
 	fake.checkScheduleMutex.Lock()
 	ret, specificReturn := fake.checkScheduleReturnsOnCall[len(fake.checkScheduleArgsForCall)]
 	fake.checkScheduleArgsForCall = append(fake.checkScheduleArgsForCall, struct {
-		arg1 scheduler.LaunchPadID
-		arg2 scheduler.Day
-		arg3 scheduler.DestinationID
+		arg1 querytypes.LaunchPadID
+		arg2 querytypes.Day
+		arg3 querytypes.DestinationID
 	}{arg1, arg2, arg3})
 	fake.recordInvocation("CheckSchedule", []interface{}{arg1, arg2, arg3})
 	fake.checkScheduleMutex.Unlock()
@@ -51,13 +52,13 @@ func (fake *FakeFlightScheduler) CheckScheduleCallCount() int {
 	return len(fake.checkScheduleArgsForCall)
 }
 
-func (fake *FakeFlightScheduler) CheckScheduleCalls(stub func(scheduler.LaunchPadID, scheduler.Day, scheduler.DestinationID) bool) {
+func (fake *FakeFlightScheduler) CheckScheduleCalls(stub func(querytypes.LaunchPadID, querytypes.Day, querytypes.DestinationID) bool) {
 	fake.checkScheduleMutex.Lock()
 	defer fake.checkScheduleMutex.Unlock()
 	fake.CheckScheduleStub = stub
 }
 
-func (fake *FakeFlightScheduler) CheckScheduleArgsForCall(i int) (scheduler.LaunchPadID, scheduler.Day, scheduler.DestinationID) {
+func (fake *FakeFlightScheduler) CheckScheduleArgsForCall(i int) (querytypes.LaunchPadID, querytypes.Day, querytypes.DestinationID) {
 	fake.checkScheduleMutex.RLock()
 	defer fake.checkScheduleMutex.RUnlock()
 	argsForCall := fake.checkScheduleArgsForCall[i]

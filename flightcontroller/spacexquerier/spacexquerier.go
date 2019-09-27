@@ -1,9 +1,13 @@
 package spacexquerier
 
-import "time"
+import (
+	"time"
+
+	"github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
+)
 
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . SpaceXQuerier
 type SpaceXQuerier interface {
-	LaunchPossible(launchID int, date time.Time) bool
-	GetLaunchIds() []int
+	LaunchPossible(launchID string, date time.Time) bool
+	GetLaunchIds() []querytypes.LaunchPadID
 }
