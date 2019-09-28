@@ -1,7 +1,5 @@
 package querytypes
 
-import "time"
-
 type Day int
 type DestinationID int
 type LaunchPadID string
@@ -10,8 +8,8 @@ type TicketDetails struct {
 	FirstName     string
 	LastName      string
 	Gender        string
-	Birthday      time.Time
+	Birthday      string // RFC.3339
 	LaunchpadID   LaunchPadID
 	DestinationID DestinationID
-	LaunchDate    time.Time
+	LaunchDate    string // RFC.3339
 }

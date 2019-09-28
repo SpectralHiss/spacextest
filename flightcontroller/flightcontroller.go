@@ -2,11 +2,13 @@ package flightcontroller
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/SpectralHiss/spacextest/flightcontroller/persister"
 
 	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
 	"github.com/SpectralHiss/spacextest/flightcontroller/scheduler"
+	
 
 	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier"
 )
@@ -29,15 +31,16 @@ func NewFlightController(db persister.Saver, q spacexquerier.SpaceXQuerier, sche
 }
 
 func (f *flightController) Reserve(t TicketDetails) error {
-
-	ok := f.sched.CheckSchedule(LaunchPadID(t.LaunchpadID), Day(t.LaunchDate.Weekday()),
+	
+	goDateLaunch,_ := time.Parse(time.RFC3339, t.LaunchDate)
+	ok := f.sched.CheckSchedule(LaunchPadID(t.LaunchpadID), Day(goDateLaunch.Weekday()),
 		DestinationID(t.DestinationID))
 
 	if !ok {
 		return fmt.Errorf("Bad request, not conforming to schedule")
 	}
 
-	if !f.q.LaunchPossible(t.LaunchpadID, t.LaunchDate) {
+	if !f.q.LaunchPossible(t.LaunchpadID,goDateLaunch) {
 		return fmt.Errorf("Bad request conflicting with spaceX launch")
 	}
 

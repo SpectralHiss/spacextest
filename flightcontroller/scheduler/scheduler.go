@@ -48,6 +48,11 @@ type FlightScheduler interface {
 	CheckSchedule(launchID LaunchPadID, d Day, dest DestinationID) bool
 }
 
+// utility method for test.. design is flawed somehow (or maybe requirement is strange)
+func (sched *Scheduler) GetCorrectSchedule(lid LaunchPadID, dw Day) DestinationID {
+	return sched.SMap[lid][dw]
+}
+
 func (sched *Scheduler) CheckSchedule(lid LaunchPadID, dw Day, dest DestinationID) bool {
 
 	launchPadSchedule, ok := sched.SMap[lid]

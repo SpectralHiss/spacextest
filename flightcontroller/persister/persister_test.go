@@ -1,13 +1,16 @@
 package persister_test
 
 import (
+
 	"testing"
 	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"database/sql"
-_ 	"github.com/lib/pq"
+
+	_ "github.com/lib/pq"
+
 
 	. "github.com/SpectralHiss/spacextest/flightcontroller/persister"
 	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
@@ -60,11 +63,12 @@ var _ = Describe("Persister",func(){
 				FirstName : "Joe",
 				LastName: "Goodman",
 				Gender: "Male",
-				Birthday: time.Now(),
+				Birthday: time.Now().UTC().Format(time.RFC3339),
 				LaunchpadID: LaunchPadID("switzerland"),
 				DestinationID: DestinationID(4),
-				LaunchDate: time.Now(),
+				LaunchDate: time.Now().UTC().Format(time.RFC3339),
 			}
+
 
 			err := saver.Save(someTicket)
 

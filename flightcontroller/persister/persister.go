@@ -2,10 +2,14 @@ package persister
 
 import (
 	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
+	
+	
 	"database/sql"
-	_ 	"github.com/lib/pq"
+	
+	_ "github.com/lib/pq"
+
 	"fmt"
-	"time"
+
 )
 
 type SaverGetter interface {
@@ -41,11 +45,11 @@ func (p *Persister) Save (t TicketDetails) error {
 		return err
 	}
 	//TODO: avoid potential sqli through prepared statement
-	query := fmt.Sprintf("INSERT INTO %s VALUES ('%s','%s','%s','%s','%s','%d','%s')",
-	p.TableName, t.FirstName, t.LastName, t.Gender, t.Birthday.Format(time.RFC3339), 
-	string(t.LaunchpadID), int(t.DestinationID), t.LaunchDate.Format(time.RFC3339))
+	query := fmt.Sprintf(`INSERT INTO %s(first_name,last_name,gender,birthday, launchpad_id, destination_id, launch_date) 
+	VALUES ('%s','%s','%s','%s','%s','%d','%s')`,
+	p.TableName, t.FirstName, t.LastName, t.Gender, t.Birthday, 
+	string(t.LaunchpadID), int(t.DestinationID), t.LaunchDate)
 	
-	fmt.Printf(query)
 	
 	_, err = db.Exec(query)
 	return err
