@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/SpectralHiss/spacextest/flightcontroller/persister"
-	"github.com/SpectralHiss/spacextest/flightcontroller/ticketdetails"
 
 	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
 	"github.com/SpectralHiss/spacextest/flightcontroller/scheduler"
@@ -29,7 +28,7 @@ func NewFlightController(db persister.Saver, q spacexquerier.SpaceXQuerier, sche
 	}
 }
 
-func (f *flightController) Reserve(t ticketdetails.TicketDetails) error {
+func (f *flightController) Reserve(t TicketDetails) error {
 
 	ok := f.sched.CheckSchedule(LaunchPadID(t.LaunchpadID), Day(t.LaunchDate.Weekday()),
 		DestinationID(t.DestinationID))

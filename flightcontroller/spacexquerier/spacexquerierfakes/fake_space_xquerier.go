@@ -20,10 +20,10 @@ type FakeSpaceXQuerier struct {
 	getLaunchIdsReturnsOnCall map[int]struct {
 		result1 []querytypes.LaunchPadID
 	}
-	LaunchPossibleStub        func(string, time.Time) bool
+	LaunchPossibleStub        func(querytypes.LaunchPadID, time.Time) bool
 	launchPossibleMutex       sync.RWMutex
 	launchPossibleArgsForCall []struct {
-		arg1 string
+		arg1 querytypes.LaunchPadID
 		arg2 time.Time
 	}
 	launchPossibleReturns struct {
@@ -88,11 +88,11 @@ func (fake *FakeSpaceXQuerier) GetLaunchIdsReturnsOnCall(i int, result1 []queryt
 	}{result1}
 }
 
-func (fake *FakeSpaceXQuerier) LaunchPossible(arg1 string, arg2 time.Time) bool {
+func (fake *FakeSpaceXQuerier) LaunchPossible(arg1 querytypes.LaunchPadID, arg2 time.Time) bool {
 	fake.launchPossibleMutex.Lock()
 	ret, specificReturn := fake.launchPossibleReturnsOnCall[len(fake.launchPossibleArgsForCall)]
 	fake.launchPossibleArgsForCall = append(fake.launchPossibleArgsForCall, struct {
-		arg1 string
+		arg1 querytypes.LaunchPadID
 		arg2 time.Time
 	}{arg1, arg2})
 	fake.recordInvocation("LaunchPossible", []interface{}{arg1, arg2})
@@ -113,13 +113,13 @@ func (fake *FakeSpaceXQuerier) LaunchPossibleCallCount() int {
 	return len(fake.launchPossibleArgsForCall)
 }
 
-func (fake *FakeSpaceXQuerier) LaunchPossibleCalls(stub func(string, time.Time) bool) {
+func (fake *FakeSpaceXQuerier) LaunchPossibleCalls(stub func(querytypes.LaunchPadID, time.Time) bool) {
 	fake.launchPossibleMutex.Lock()
 	defer fake.launchPossibleMutex.Unlock()
 	fake.LaunchPossibleStub = stub
 }
 
-func (fake *FakeSpaceXQuerier) LaunchPossibleArgsForCall(i int) (string, time.Time) {
+func (fake *FakeSpaceXQuerier) LaunchPossibleArgsForCall(i int) (querytypes.LaunchPadID, time.Time) {
 	fake.launchPossibleMutex.RLock()
 	defer fake.launchPossibleMutex.RUnlock()
 	argsForCall := fake.launchPossibleArgsForCall[i]

@@ -4,9 +4,9 @@ import (
 	"math/rand"
 	"testing"
 
-	. "github.com/SpectralHiss/spacextest/flightcontroller/scheduler"
-
 	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
+
+	. "github.com/SpectralHiss/spacextest/flightcontroller/scheduler"
 
 	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier/spacexquerierfakes"
 
@@ -14,7 +14,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestBooks(t *testing.T) {
+func TestScheduler(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Scheduler suite")
 }

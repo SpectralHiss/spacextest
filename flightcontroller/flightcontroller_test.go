@@ -4,31 +4,32 @@ import (
 	"testing"
 	"time"
 
+	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	. "github.com/SpectralHiss/spacextest/flightcontroller"
 	"github.com/SpectralHiss/spacextest/flightcontroller/persister/persisterfakes"
-	"github.com/SpectralHiss/spacextest/flightcontroller/ticketdetails"
 
 	"github.com/SpectralHiss/spacextest/flightcontroller/scheduler/schedulerfakes"
 	"github.com/SpectralHiss/spacextest/flightcontroller/spacexquerier/spacexquerierfakes"
 )
 
-func TestBooks(t *testing.T) {
+func TestController(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Controller suite")
 }
 
 var _ = Describe("Space flight booking", func() {
 
-	var defaultTicketRequest = ticketdetails.TicketDetails{
+	var defaultTicketRequest = TicketDetails{
 		FirstName:     "Houssem",
 		LastName:      "El Fekih",
 		Gender:        "Male",
 		Birthday:      time.Now(),
-		LaunchpadID:   "someval",
-		DestinationID: 0,
+		LaunchpadID:   LaunchPadID("someval"),
+		DestinationID: DestinationID(0),
 		LaunchDate:    time.Now()}
 
 	Describe("creating new reservation", func() {
