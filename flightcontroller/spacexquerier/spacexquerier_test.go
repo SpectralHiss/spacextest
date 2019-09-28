@@ -81,6 +81,16 @@ var _ = Describe("SpaceX api integration", func() {
 			})
 
 		})
+
+		Context("when called with a non-conflicting date for a launchpadID",func(){
+			It("Should return false",func(){
+				aDateOfLaunch , err := time.Parse(time.RFC3339, "2049-02-22T01:45:00.000Z")
+				Expect(err).To(BeNil())
+				ret := spaceXQ.LaunchPossible(LaunchPadID("ksc_lc_39a"),aDateOfLaunch)
+				Expect(ret).To(BeTrue())
+			})
+
+		})
 	})
 
 
