@@ -2,6 +2,10 @@ package persister
 
 import (
 	. "github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
+	"database/sql"
+	_ 	"github.com/lib/pq"
+	"fmt"
+	"time"
 )
 
 type SaverGetter interface {
@@ -15,7 +19,8 @@ type Saver interface {
 }
 
 type Persister struct {
-	connString string
+	ConnString string
+	TableName string
 }
 
 /*
@@ -30,9 +35,20 @@ type TicketDetails struct {
 }*/
 
 
-func (*Persister) Save (TicketDetails) error {
+func (p *Persister) Save (t TicketDetails) error {
+	db, err := sql.Open("postgres",p.ConnString)
+	if err != nil {
+		return err
+	}
+	//TODO: avoid potential sqli through prepared statement
+	query := fmt.Sprintf("INSERT INTO %s VALUES ('%s','%s','%s','%s','%s','%d','%s')",
+	p.TableName, t.FirstName, t.LastName, t.Gender, t.Birthday.Format(time.RFC3339), 
+	string(t.LaunchpadID), int(t.DestinationID), t.LaunchDate.Format(time.RFC3339))
 	
-	return nil
+	fmt.Printf(query)
+	
+	_, err = db.Exec(query)
+	return err
 }
 
 // type Getter interface {

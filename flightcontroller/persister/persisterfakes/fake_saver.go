@@ -4,6 +4,8 @@ package persisterfakes
 import (
 	"sync"
 
+	"database/sql"
+	_ 	"github.com/lib/pq"
 	"github.com/SpectralHiss/spacextest/flightcontroller/persister"
 	"github.com/SpectralHiss/spacextest/flightcontroller/querytypes"
 )

@@ -22,16 +22,17 @@ func TestPersister(t *testing.T) {
 var _ = Describe("Persister",func(){
 	// testing using localhost and alternate table
 	var db *sql.DB
+	var connString = "postgres://postgres@localhost:8001/postgres?sslmode=disable"
 	
 	AfterSuite(func(){db.Close()})
 	BeforeSuite(func(){
 		var err error
-		db, err = sql.Open("postgres", "postgres://postgres@localhost:8001/postgres?sslmode=disable")
+		db, err = sql.Open("postgres", connString)
 		Expect(err).To(BeNil())
 	})
 	
 
-	var saver Persister
+	var saver *Persister
 	
 	Context("when save persister is invoked with a valid ticketrequest",func(){
 
@@ -46,6 +47,8 @@ var _ = Describe("Persister",func(){
 				destination_id SMALLINT,
 				launch_date timestamptz)`)
 				Expect(err).To(BeNil())
+
+			saver = &Persister{ConnString: connString, TableName: "test_tickets"}
 		})
 
 		AfterEach(func(){
@@ -55,7 +58,7 @@ var _ = Describe("Persister",func(){
 		It("The ticket should be added to the database",func(){
 			someTicket := TicketDetails{
 				FirstName : "Joe",
-				LastName: "McJosephson",
+				LastName: "Goodman",
 				Gender: "Male",
 				Birthday: time.Now(),
 				LaunchpadID: LaunchPadID("switzerland"),
@@ -77,7 +80,8 @@ var _ = Describe("Persister",func(){
 			var ticket TicketDetails
 			for rows.Next() {
 				// should only be 1
-				err = rows.Scan(&ticket)
+				err = rows.Scan(&ticket.FirstName, &ticket.LastName, &ticket.Gender,
+					 &ticket.Birthday, &ticket.LaunchpadID, &ticket.DestinationID, &ticket.LaunchDate)
 			}
 			Expect(err).To(BeNil())
 			Expect(ticket).To(Equal(someTicket))
