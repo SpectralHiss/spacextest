@@ -6,7 +6,7 @@ import (
 
 type SaverGetter interface {
 	Saver
-	Getter
+	//Getter
 }
 
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . Saver
@@ -14,6 +14,28 @@ type Saver interface {
 	Save(TicketDetails) error
 }
 
-type Getter interface {
-	GetAll() []TicketDetails
+type Persister struct {
+	connString string
 }
+
+/*
+type TicketDetails struct {
+	FirstName     string
+	LastName      string
+	Gender        string
+	Birthday      time.Time
+	LaunchpadID   LaunchPadID
+	DestinationID DestinationID
+	LaunchDate    time.Time
+}*/
+
+
+func (*Persister) Save (TicketDetails) error {
+	
+	return nil
+}
+
+// type Getter interface {
+// 	GetAll() []TicketDetails
+// }
+
